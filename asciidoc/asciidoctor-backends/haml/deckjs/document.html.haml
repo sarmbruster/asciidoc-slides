@@ -136,12 +136,6 @@
     - if attr? :logo
       %img#logo(src='#{attr :logo}') 
       
-      %div.slide
-        %h2 Status of the presenation
-        %h3 Cypher queries execution
-        %div
-          %div#status
-          %pre#errors
     - if attr? :customjs   
       %script(src="#{attr :customjs}")
     :javascript
