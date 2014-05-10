@@ -1,0 +1,155 @@
+= Extending Neo4j
+:presenter: Stefan Armbruster
+:twitter: darthvader42
+:email: stefan.armbruster@neotechnology.com
+:backend: deckjs
+:deckjsdir: ../../../asciidoc/deck.js
+:deckjs_theme: neotech
+:icons: font
+:source-highlighter: codemirror
+:navigation:
+:goto:
+:status:
+:arrows:
+:customjs: ../../../asciidoc/js/checkcypher.js
+:gist-source: https://raw.github.com/neo4j-contrib/gists/master/
+:footer: © All Rights Reserved 2014 | Neo Technology, Inc.
+:img: img
+:logo: {img}/Neo_Technology.jpg
+:allow-uri-read:
+:video:
+:docs-link: https://github.com/sarmbruster/asciidoc-slides[documentation]
+:download-link: https://github.com/sarmbruster/asciidoc-slides/archive/master.zip[download]
+:sectids!:
+:deckjs_transition: fade
+
+++++
+<style type="text/css">
+.small {
+   font-size:0.6em;
+}
+</style>
+++++
+
+
+== Who ?
+
+* Stefan Armbruster
+* Graph Exorcist at Neo Technology
+* contributor to Grails and Neo4j
+* volunteer firefighter
+* @darthvader42 | stefan.armbruster@neotechnology.com
+
+
+
+
+
+
+
+
+== a graph database...
+
+* great for *complex* data
+** _complexity = f(size, uniformity, connectedness)_
+* super fast on following connections
+* neat query language: *Cypher*
+
+
+== property graph model
+
+image::{img}/propertygraph.png[]
+
+== deployment: embedded
+
+image::{img}/embedded.png[]
+
+
+== deployment: server (plain)
+
+image::{img}/server.png[]
+
+== server with extensions
+
+image::{img}/extension.png[]
+
+////
+=== running as server
+
+* + separate process / JVM -> less GC fuckup
+* + any client language / platform
+* +/- just REST to talk to server
+
+== deployment alternatives
+
+=== running in embedded mode
+
+* + maximum performance
+* + direct access to Java API
+* - requires JVM as client platform
+* - life cycle controlled by app
+
+////
+
+== deployment alternatives
+
+* both *embedded* and *server* can be clustered
+* both have the same transactionality
+* both feature *Cypher*
+
+== unmanaged extensions
+
+[options="step"]
+* JAX-RS annoteded Java classes
+* expose new REST endpoints
+* big power
+* big responsibility
+* "speak your domain language"
+
+== unmanaged extensions
+
+[options="step"]
+* testing is curcial
+* *whitebox* and *blackbox* tests
+
+== ingredients 
+
+[options="step"]
+* build system: http://www.gradle.org
+* git - obviously!
+* unmanaged extensions: java + jax rs
+* test: http://www.spockframework.org
+
+== ingredients (2)
+
+[options="step"]
+* ide / debugger: IntelliJ
+* test infrastructure: neo4j-spock-extensions
+** https://github.com/sarmbruster/neo4j-spock-extension
+* profiler: yourkit
+
+
+////
+== CypherExecutor 
+
+[source,java]
+----
+@Context // <-- gets injecteded for you
+CypherExecutor cypherExecutor
+
+public void createUser() {
+    cypherExecutor.getExecutionEngine().execute("CREATE (:User {name:'Stefan'})")
+}
+----
+////
+
+== Want more
+
+* https://neo4j.org
+* unmanaged extension archetype
+** https://github.com/sarmbruster/unmanaged-extension-archetype
+
+== That's it
+
+=== Questions ?
+
+=== Tanks!

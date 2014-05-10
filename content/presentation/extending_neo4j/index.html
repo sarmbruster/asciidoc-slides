@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="Asciidoctor 0.1.4" name="generator">
+<title>Extending Neo4j</title>
+<script src="../../../asciidoc/deck.js/jquery.min.js"></script>
+<script src="../../../asciidoc/deck.js/core/deck.core.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/codemirror/deck.codemirror.css" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/codemirror/themes/default.css" rel="stylesheet">
+<script src="../../../asciidoc/deck.js/extensions/codemirror/codemirror.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/codemirror/deck.codemirror.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/codemirror/mode/javascript/javascript.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/codemirror/mode/css/css.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/cypher/deck.cypher.js"></script>
+<link href="../../../asciidoc/deck.js/extensions/cypher/deck.cypher.css" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/core/deck.core.css" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/hash/deck.hash.css" media="screen" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/scale/deck.scale.css" media="screen" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/goto/deck.goto.css" media="screen" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/navigation/deck.navigation.css" media="screen" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/extensions/status/deck.status.css" media="screen" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/themes/style/neotech.css" media="screen" rel="stylesheet">
+<link href="../../../asciidoc/deck.js/core/print.css" media="print" rel="stylesheet">
+<script src="../../../asciidoc/deck.js/modernizr.custom.js"></script>
+</head>
+<body class="deck-container article">
+<section class="slide" id="title-slide">
+<h1>Extending Neo4j</h1>
+</section>
+<div id="preamble">
+<div class="sectionbody">
+<style type="text/css">
+.small {
+   font-size:0.6em;
+}
+</style>
+</div>
+</div>
+
+<section class="slide">
+<h2>Who ?</h2>
+<div class="ulist">
+<ul>
+<li>Stefan Armbruster</li>
+<li>Graph Exorcist at Neo Technology</li>
+<li>contributor to Grails and Neo4j</li>
+<li>volunteer firefighter</li>
+<li>@darthvader42 | <a href="mailto:stefan.armbruster@neotechnology.com">stefan.armbruster@neotechnology.com</a></li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>a graph database&#8230;</h2>
+<div class="ulist">
+<ul>
+<li><p>
+great for <strong>complex</strong> data
+<div class="ulist">
+<ul>
+<li><em>complexity = f(size, uniformity, connectedness)</em></li>
+</ul>
+</div>
+</p></li>
+<li>super fast on following connections</li>
+<li>neat query language: <strong>Cypher</strong></li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>property graph model</h2>
+<div class="imageblock">
+<div class="content">
+<img alt="propertygraph" src="img/propertygraph.png">
+</div>
+</div>
+</section>
+
+<section class="slide">
+<h2>deployment: embedded</h2>
+<div class="imageblock">
+<div class="content">
+<img alt="embedded" src="img/embedded.png">
+</div>
+</div>
+</section>
+
+<section class="slide">
+<h2>deployment: server (plain)</h2>
+<div class="imageblock">
+<div class="content">
+<img alt="server" src="img/server.png">
+</div>
+</div>
+</section>
+
+<section class="slide">
+<h2>server with extensions</h2>
+<div class="imageblock">
+<div class="content">
+<img alt="extension" src="img/extension.png">
+</div>
+</div>
+</section>
+
+<section class="slide">
+<h2>deployment alternatives</h2>
+<div class="ulist">
+<ul>
+<li>both <strong>embedded</strong> and <strong>server</strong> can be clustered</li>
+<li>both have the same transactionality</li>
+<li>both feature <strong>Cypher</strong></li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>unmanaged extensions</h2>
+<div class="ulist">
+<ul>
+<li class="slide">JAX-RS annoteded Java classes</li>
+<li class="slide">expose new REST endpoints</li>
+<li class="slide">big power</li>
+<li class="slide">big responsibility</li>
+<li class="slide">"speak your domain language"</li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>unmanaged extensions</h2>
+<div class="ulist">
+<ul>
+<li class="slide">testing is curcial</li>
+<li class="slide"><strong>whitebox</strong> and <strong>blackbox</strong> tests</li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>ingredients</h2>
+<div class="ulist">
+<ul>
+<li class="slide">build system: <a href="http://www.gradle.org">http://www.gradle.org</a></li>
+<li class="slide">git - obviously!</li>
+<li class="slide">unmanaged extensions: java + jax rs</li>
+<li class="slide">test: <a href="http://www.spockframework.org">http://www.spockframework.org</a></li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>ingredients (2)</h2>
+<div class="ulist">
+<ul>
+<li class="slide">ide / debugger: IntelliJ</li>
+<li class="slide"><p>
+test infrastructure: neo4j-spock-extensions
+<div class="ulist">
+<ul>
+<li><a href="https://github.com/sarmbruster/neo4j-spock-extension">https://github.com/sarmbruster/neo4j-spock-extension</a></li>
+</ul>
+</div>
+</p></li>
+<li class="slide">profiler: yourkit</li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>Want more</h2>
+<div class="ulist">
+<ul>
+<li><a href="https://neo4j.org">https://neo4j.org</a></li>
+<li><p>
+unmanaged extension archetype
+<div class="ulist">
+<ul>
+<li><a href="https://github.com/sarmbruster/unmanaged-extension-archetype">https://github.com/sarmbruster/unmanaged-extension-archetype</a></li>
+</ul>
+</div>
+</p></li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>That&#8217;s it</h2>
+<section class="slide">
+<h3>Questions ?</h3>
+
+</section>
+
+<section class="slide">
+<h3>Tanks!</h3>
+
+</section>
+</section>
+
+<a class="deck-prev-link" href="#" title="Previous">&#8592;</a>
+<a class="deck-next-link" href="#" title="Next">&#8594;</a>
+<p class="deck-status">
+<span class="deck-status-current"></span>
+/
+<span class="deck-status-total"></span>
+</p>
+<form action="." class="goto-form" method="get">
+<label for="goto-slide">Go to Slide:</label>
+<input id="goto-slide" list="goto-datalist" name="slidenum" type="text">
+<datalist id="goto-data-list"></datalist>
+<input type="submit" value="Go">
+</form>
+<a class="deck-permalink" href="." title="Permalink to this slide">#</a>
+<script src="../../../asciidoc/deck.js/extensions/hash/deck.hash.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/scale/deck.scale.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/goto/deck.goto.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/status/deck.status.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/arrows/home.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/arrows/d3.v3.js"></script>
+<script src="../../../asciidoc/deck.js/extensions/arrows/arrows-graph-diagram.js"></script>
+<footer>© All Rights Reserved 2014 | Neo Technology, Inc.</footer>
+<img id="logo" src="img/Neo_Technology.jpg">
+<script src="../../../asciidoc/js/checkcypher.js"></script>
+<script>
+  //<![CDATA[
+    (function($, deck, undefined) {
+      $.deck.defaults.keys['previous'] = [8, 33, 37, 39];
+      $.deck.defaults.keys['next'] = [13, 32, 34, 39];
+    
+      $.extend(true, $[deck].defaults, {
+          countNested: false
+      });
+    
+      $.deck('.slide');
+    })(jQuery, 'deck');
+  //]]>
+</script>
+<style>
+  /*<![CDATA[*/
+    .slide.canvas-image {
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    display: -moz-box;
+    display: -webkit-box;
+    display: -ms-box;
+    display: box;
+    -moz-box-orient: vertical;
+    -webkit-box-orient: vertical;
+    -ms-box-orient: vertical;
+    box-orient: vertical;
+    -moz-box-align: start;
+    -webkit-box-align: start;
+    -ms-box-align: start;
+    box-align: start;
+    -moz-box-pack: start;
+    -webkit-box-pack: start;
+    -ms-box-pack: start;
+    box-pack: start;}
+    
+    .bottom-left {
+      left: 1%;
+      bottom: 20%; }
+    
+    .top-left {
+      left: 1%;
+      top: 20%; }
+    
+    .bottom-right {
+      right: 1%;
+      bottom: 20%; }
+    
+    .top-right {
+      right: 1%;
+      top: 20%; }
+    
+    .center-up {
+      right: 50%;
+      top: 1%;
+    }
+    
+    .center-down {
+      right: 50%;
+      bottom: 1%;
+    }
+    .canvas-image .canvas-caption p {
+      text-align: center;
+      padding-top: 0;
+      padding: 0;
+      -moz-transform: none;
+      -webkit-transform: none;
+      -o-transform: none;
+      -ms-transform: none;
+      transform: none;
+      display: inline;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.7);
+      font-weight: bold;
+      font-size: 58px;
+      -webkit-box-shadow: 2px 2px 2px #000;
+      -moz-box-shadow: 2px 2px 2px #000;
+      box-shadow: 2px 2px 2px #000;
+      padding: 1rem;
+      color: white; }
+    kbd.keyseq { color: #555555; }
+    kbd:not(.keyseq) {
+      display: inline-block;
+      color: #222222;
+      font-size: 0.7em;
+      line-height: 1.4;
+      background-color: #F7F7F7;
+      border: 1px solid #ccc;
+      -webkit-border-radius: 3px;
+      border-radius: 3px;
+      -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset;
+      margin: -0.15em 0.15em 0 0.15em;
+      padding: 0.2em 0.6em;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    kbd kbd:first-child { margin-left: 0; }
+    kbd kbd:last-child { margin-right: 0; }
+  /*]]>*/
+</style>
+</body>
+</html>
